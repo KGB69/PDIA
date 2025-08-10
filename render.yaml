@@ -2,7 +2,7 @@ services:
   - type: static
     name: pdia-website
     buildCommand: npm install && npm run build
-    publishDir: dist
+    publishDir: ./dist
     pullRequestPreviewsEnabled: true
     headers:
       - path: /*
