@@ -116,16 +116,18 @@ const HeroSection: React.FC = () => {
       ))}
       
       {/* Content Container */}
-      <div className="relative z-10 px-4 flex flex-col items-center">
+      <div className="relative z-10 px-4 flex flex-col items-center w-full max-w-7xl mx-auto">
          {/* Text Slideshow Container */}
-         <div className="relative w-full h-56 md:h-64 mb-8 flex items-center justify-center">
+         <div className="relative w-full h-auto min-h-[200px] md:min-h-[240px] mb-8 flex items-center justify-center">
             {SERVICES_DATA.map((service, index) => (
             <div
                 key={service.title}
                 className={`absolute inset-0 flex items-center justify-center transition-opacity duration-1000 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0'}`}
             >
-                <h1 className="text-4xl md:text-6xl font-extrabold text-pdi-red tracking-tight leading-tight max-w-4xl mx-auto">
-                {service.title}
+                <h1 className="text-4xl md:text-6xl font-extrabold text-pdi-red tracking-tight leading-tight w-full px-4 md:px-8 text-center">
+                {service.title.split(' ').map((word, i) => (
+                  <span key={i} className="inline-block mx-1">{word}</span>
+                ))}
                 </h1>
             </div>
             ))}
