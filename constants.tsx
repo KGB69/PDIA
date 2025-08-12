@@ -116,9 +116,8 @@ export const TEAM_DATA: TeamMember[] = [
     { name: 'DR. GRACE KIIRIA', role: 'Expert in Educational Development, Management and Administration' },
     { name: 'DR. NAMBI BERNADICT', role: 'Specialist in curriculum development and review' },
     { name: 'MR. MOSES TUHAME', role: 'Expert in ICT' },
-    { name: 'MR. DAVID OKELLO', role: 'Expert in social development and administration' },
     { name: 'MS. RACHAEL KALEMBE', role: 'Educationist and Professional trainer' },
-    { name: 'MR. NAIGO PAUL', role: 'Educationist and professional trainer' },
+    { name: 'MR. NAIGO PAUL', role: 'Expert in school leadership and teacher training' },
     { name: 'MR. OMODING JONATHAN OKIA', role: 'Graphics & Product Design Lead' }
 ];
 
