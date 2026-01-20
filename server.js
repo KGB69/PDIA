@@ -21,7 +21,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Global request logger
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Content-Type: ${req.headers['content-type']}`);
     next();
 });
 
@@ -44,14 +44,23 @@ const upload = multer({
 
 // --- API ROUTES (Strictly before static files) ---
 
+// Debug endpoint to verify deployment
+app.get('/api/debug', (req, res) => {
+    res.json({
+        message: 'Server is running with latest code',
+        timestamp: new Date().toISOString(),
+        uploadsDir,
+        nodeVersion: process.version,
+        env: process.env.NODE_ENV
+    });
+});
+
 // Image Upload Endpoint
 app.post('/api/upload-image', (req, res) => {
-    console.log('Starting upload handling...');
-
-    // Check Content-Type
-    if (!req.is('multipart/form-data')) {
-        console.warn('Warning: Request Content-Type is not multipart/form-data:', req.headers['content-type']);
-    }
+    console.log('=== UPLOAD REQUEST START ===');
+    console.log('Query params:', req.query);
+    console.log('Content-Type:', req.headers['content-type']);
+    console.log('Content-Length:', req.headers['content-length']);
 
     const uploadSingle = upload.single('file');
 
@@ -62,18 +71,14 @@ app.post('/api/upload-image', (req, res) => {
         }
 
         if (!req.file) {
-            console.error('No file in request. Body keys:', Object.keys(req.body));
+            console.error('No file in request. Body:', req.body);
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
         console.log(`Upload successful: ${req.file.filename} (${req.file.size} bytes)`);
+        console.log('=== UPLOAD REQUEST END ===');
 
-        try {
-            res.json({ url: `/uploads/${req.file.filename}` });
-        } catch (resErr) {
-            console.error('Error sending response JSON:', resErr);
-            res.status(500).json({ error: 'Failed to send response' });
-        }
+        res.json({ url: `/uploads/${req.file.filename}` });
     });
 });
 
@@ -113,4 +118,5 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Uploads directory: ${uploadsDir}`);
+    console.log(`Node version: ${process.version}`);
 });
