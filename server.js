@@ -19,37 +19,42 @@ if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// API endpoint for image upload (Raw binary stream)
-app.post('/api/upload-image', (req, res) => {
-    console.log('Upload request received:', req.query.filename);
-
-    const filename = req.query.filename;
-    if (!filename) {
-        return res.status(400).json({ error: 'Filename required' });
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadsDir);
+    },
+    filename: (req, file, cb) => {
+        // Use the filename query param if provided, otherwise fallback to originalname
+        const filename = req.query.filename || file.originalname;
+        console.log('Multer saving file as:', filename);
+        cb(null, filename);
     }
+});
 
-    const filePath = join(uploadsDir, filename);
-    console.log('Writing to:', filePath);
+const upload = multer({
+    storage,
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+});
 
-    const writeStream = fs.createWriteStream(filePath);
+// API endpoint for image upload (Multipart/form-data via Multer)
+app.post('/api/upload-image', (req, res) => {
+    // Manually handle upload to catch errors
+    const uploadSingle = upload.single('file');
 
-    req.pipe(writeStream);
-
-    writeStream.on('finish', () => {
-        console.log('Upload complete:', filename);
-        res.json({ url: `/uploads/${filename}` });
-    });
-
-    writeStream.on('error', (err) => {
-        console.error('Upload write error:', err);
-        res.status(500).json({ error: 'Upload failed during write' });
-    });
-
-    req.on('error', (err) => {
-        console.error('Request stream error:', err);
-        if (!res.headersSent) {
-            res.status(500).json({ error: 'Upload request failed' });
+    uploadSingle(req, res, (err) => {
+        if (err) {
+            console.error('Multer upload error:', err);
+            return res.status(500).json({ error: 'Upload failed: ' + err.message });
         }
+
+        if (!req.file) {
+            console.error('No file in request');
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        console.log('Upload successful:', req.file.filename);
+        res.json({ url: `/uploads/${req.file.filename}` });
     });
 });
 
