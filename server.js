@@ -20,25 +20,26 @@ if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadsDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname);
+// API endpoint for image upload (Raw binary stream to match frontend)
+app.post('/api/upload-image', (req, res) => {
+    const filename = req.query.filename;
+    if (!filename) {
+        return res.status(400).json({ error: 'Filename required' });
     }
-});
 
-const upload = multer({ storage });
+    const filePath = join(uploadsDir, filename);
+    const writeStream = fs.createWriteStream(filePath);
 
-// API endpoint for image upload
-app.post('/api/upload-image', upload.single('file'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
-    }
-    const url = `/uploads/${req.file.filename}`;
-    res.json({ url });
+    req.pipe(writeStream);
+
+    writeStream.on('finish', () => {
+        res.json({ url: `/uploads/${filename}` });
+    });
+
+    writeStream.on('error', (err) => {
+        console.error('Upload error:', err);
+        res.status(500).json({ error: 'Upload failed' });
+    });
 });
 
 // API endpoint for saving content
