@@ -22,13 +22,30 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
 
     const uploadImage = async (file: File, filename: string): Promise<string> => {
-        const response = await fetch(`/api/upload-image?filename=${encodeURIComponent(filename)}`, {
-            method: 'POST',
-            body: file,
-        });
-        if (!response.ok) throw new Error('Upload failed');
-        const data = await response.json();
-        return data.url;
+        try {
+            const response = await fetch(`/api/upload-image?filename=${encodeURIComponent(filename)}`, {
+                method: 'POST',
+                body: file,
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                console.error(`Upload failed (${response.status}):`, text);
+                throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+            }
+
+            const text = await response.text();
+            try {
+                const data = JSON.parse(text);
+                return data.url;
+            } catch (e) {
+                console.error('Invalid JSON response:', text);
+                throw new Error('Server returned invalid JSON response');
+            }
+        } catch (error) {
+            console.error('Upload error details:', error);
+            throw error;
+        }
     };
 
     const saveChanges = async () => {
