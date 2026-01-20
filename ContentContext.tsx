@@ -23,9 +23,12 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     const uploadImage = async (file: File, filename: string): Promise<string> => {
         try {
+            const formData = new FormData();
+            formData.append('file', file);
+
             const response = await fetch(`/api/upload-image?filename=${encodeURIComponent(filename)}`, {
                 method: 'POST',
-                body: file,
+                body: formData,
             });
 
             if (!response.ok) {
