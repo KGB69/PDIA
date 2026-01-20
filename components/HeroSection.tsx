@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { SERVICES_DATA } from '../constants';
+import { useContent } from '../ContentContext';
 
 const Pattern1: React.FC<{ className?: string }> = ({ className }) => (
+    /* ... SVG content ... */
     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className={className}>
         <defs>
             <pattern id="p1" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -46,10 +47,10 @@ const Pattern4: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 const Pattern5: React.FC<{ className?: string }> = ({ className }) => (
-     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className={className}>
         <defs>
             <pattern id="p5" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
-                 <path d="M 0 0 L 15 30 L 30 0 Z" fill="rgba(254, 202, 202, 0.5)"></path>
+                <path d="M 0 0 L 15 30 L 30 0 Z" fill="rgba(254, 202, 202, 0.5)"></path>
             </pattern>
         </defs>
         <rect x="0" y="0" width="100%" height="100%" fill="url(#p5)" />
@@ -57,10 +58,10 @@ const Pattern5: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 const Pattern6: React.FC<{ className?: string }> = ({ className }) => (
-     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className={className}>
         <defs>
             <pattern id="p6" width="25" height="25" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                 <path d="M 12.5 0 L 12.5 25 M 0 12.5 L 25 12.5" stroke="#FECACA" strokeWidth="1"></path>
+                <path d="M 12.5 0 L 12.5 25 M 0 12.5 L 25 12.5" stroke="#FECACA" strokeWidth="1"></path>
             </pattern>
         </defs>
         <rect x="0" y="0" width="100%" height="100%" fill="url(#p6)" />
@@ -78,71 +79,72 @@ const backgroundPatterns = [
 ];
 
 const HeroSection: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+    const { content } = useContent();
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % SERVICES_DATA.length);
-    }, 5000); // Change slide every 5 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % content.services.length);
+        }, 5000);
 
-    return () => clearInterval(interval);
-  }, []);
+        return () => clearInterval(interval);
+    }, [content.services.length]);
 
-  const handleLearnMoreClick = () => {
-    const servicesSection = document.getElementById('services');
-    if (servicesSection) {
-      servicesSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+    const handleLearnMoreClick = () => {
+        const servicesSection = document.getElementById('services');
+        if (servicesSection) {
+            servicesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
-  return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden text-center bg-white">
-      {/* Loader */}
-      <div className="absolute top-0 left-0 h-1 w-full z-20">
-          <div
-            key={currentIndex} 
-            className="h-full bg-pdi-red animate-slide-progress"
-          ></div>
-      </div>
-
-      {/* Background Patterns Slideshow */}
-      {backgroundPatterns.map((PatternComponent, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0'}`}
-        >
-          {PatternComponent}
-        </div>
-      ))}
-      
-      {/* Content Container */}
-      <div className="relative z-10 px-4 flex flex-col items-center w-full max-w-7xl mx-auto">
-         {/* Text Slideshow Container */}
-         <div className="relative w-full h-auto min-h-[200px] md:min-h-[240px] mb-8 flex items-center justify-center">
-            {SERVICES_DATA.map((service, index) => (
-            <div
-                key={service.title}
-                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-1000 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0'}`}
-            >
-                <h1 className="text-4xl md:text-6xl font-extrabold text-pdi-red tracking-tight leading-tight w-full px-4 md:px-8 text-center">
-                {service.title.split(' ').map((word, i) => (
-                  <span key={i} className="inline-block mx-1">{word}</span>
-                ))}
-                </h1>
+    return (
+        <section className="relative h-screen w-full flex items-center justify-center overflow-hidden text-center bg-white">
+            {/* Loader */}
+            <div className="absolute top-0 left-0 h-1 w-full z-20">
+                <div
+                    key={currentIndex}
+                    className="h-full bg-pdi-red animate-slide-progress"
+                ></div>
             </div>
-            ))}
-        </div>
 
-        {/* Learn More Button */}
-        <button
-            onClick={handleLearnMoreClick}
-            className="bg-pdi-red hover:bg-pdi-red/90 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg"
-        >
-            Learn More
-        </button>
-      </div>
-    </section>
-  );
+            {/* Background Patterns Slideshow */}
+            {backgroundPatterns.map((PatternComponent, index) => (
+                <div
+                    key={index}
+                    className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0'}`}
+                >
+                    {PatternComponent}
+                </div>
+            ))}
+
+            {/* Content Container */}
+            <div className="relative z-10 px-4 flex flex-col items-center w-full max-w-7xl mx-auto">
+                {/* Text Slideshow Container */}
+                <div className="relative w-full h-auto min-h-[200px] md:min-h-[240px] mb-8 flex items-center justify-center">
+                    {content.services.map((service, index) => (
+                        <div
+                            key={index}
+                            className={`absolute inset-0 flex items-center justify-center transition-opacity duration-1000 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0'}`}
+                        >
+                            <h1 className="text-4xl md:text-6xl font-extrabold text-pdi-red tracking-tight leading-tight w-full px-4 md:px-8 text-center">
+                                {service.title.split(' ').map((word, i) => (
+                                    <span key={i} className="inline-block mx-1">{word}</span>
+                                ))}
+                            </h1>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Learn More Button */}
+                <button
+                    onClick={handleLearnMoreClick}
+                    className="bg-pdi-red hover:bg-pdi-red/90 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+                >
+                    Learn More
+                </button>
+            </div>
+        </section>
+    );
 };
 
 export default HeroSection;

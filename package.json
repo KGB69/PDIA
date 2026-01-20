@@ -13,11 +13,15 @@
     "start": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }

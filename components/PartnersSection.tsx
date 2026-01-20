@@ -1,18 +1,21 @@
 
 import React from 'react';
-import { PARTNERS_DATA } from '../constants';
+import { useContent } from '../ContentContext';
+import IconRenderer from './IconRenderer';
 import type { Partner } from '../types';
 
 const PartnerCard: React.FC<{ partner: Partner }> = ({ partner }) => (
   <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 text-center">
     <div className="flex justify-center mb-4">
-        {partner.icon}
+      <IconRenderer iconName={partner.icon} className="w-10 h-10 text-pdi-red" />
     </div>
     <h4 className="font-semibold text-pdi-dark-blue">{partner.name}</h4>
   </div>
 );
 
 const PartnersSection: React.FC = () => {
+  const { content } = useContent();
+
   return (
     <section id="partners" className="py-20 bg-white scroll-mt-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,8 +28,8 @@ const PartnersSection: React.FC = () => {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {PARTNERS_DATA.map((partner) => (
-            <PartnerCard key={partner.name} partner={partner} />
+          {content.partners.map((partner, index) => (
+            <PartnerCard key={index} partner={partner} />
           ))}
         </div>
       </div>

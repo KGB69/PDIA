@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { NAV_LINKS } from '../constants';
+import { useContent } from '../ContentContext';
 import Logo from './Logo';
 
 const Header: React.FC = () => {
+  const { content } = useContent();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -39,10 +40,10 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <a href="#" onClick={(e) => handleNavClick(e, '#')} className="flex-shrink-0">
-            <Logo />
+            <Logo src={content.branding.logoTop} />
           </a>
           <nav className="hidden md:flex space-x-8">
-            {NAV_LINKS.map((link) => (
+            {content.navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
@@ -75,7 +76,7 @@ const Header: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {NAV_LINKS.map((link) => (
+            {content.navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
