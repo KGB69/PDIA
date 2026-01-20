@@ -10,18 +10,20 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Global request logger
-app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-    next();
-});
-
 // Ensure uploads directory exists
 const uploadsDir = join(__dirname, 'dist', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
     console.log('Creating uploads directory:', uploadsDir);
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
+
+// --- MIDDLEWARE FIRST ---
+
+// Global request logger
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
 
 // Configure multer
 const storage = multer.diskStorage({
@@ -40,7 +42,7 @@ const upload = multer({
     limits: { fileSize: 50 * 1024 * 1024 }
 });
 
-// --- API ROUTES FIRST (Before Static Files) ---
+// --- API ROUTES (Strictly before static files) ---
 
 // Image Upload Endpoint
 app.post('/api/upload-image', (req, res) => {
@@ -56,7 +58,6 @@ app.post('/api/upload-image', (req, res) => {
     uploadSingle(req, res, (err) => {
         if (err) {
             console.error('Multer upload error:', err);
-            // Ensure we send JSON error even if multer fails
             return res.status(500).json({ error: 'Upload middleware failed: ' + err.message });
         }
 
@@ -67,7 +68,6 @@ app.post('/api/upload-image', (req, res) => {
 
         console.log(`Upload successful: ${req.file.filename} (${req.file.size} bytes)`);
 
-        // Use standard JSON response
         try {
             res.json({ url: `/uploads/${req.file.filename}` });
         } catch (resErr) {
