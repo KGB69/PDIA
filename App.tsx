@@ -11,7 +11,7 @@ import { ContentProvider, useContent } from './ContentContext';
 import AdminDashboard from './components/admin/AdminDashboard';
 
 const AppContent: React.FC = () => {
-  const { isAdmin, setIsAdmin } = useContent();
+  const { isAdmin, setIsAdmin, content } = useContent();
   const [clickCount, setClickCount] = React.useState(0);
   const [lastClickTime, setLastClickTime] = React.useState(0);
 
@@ -45,8 +45,8 @@ const AppContent: React.FC = () => {
       <AboutSection />
       <ServicesSection />
       <ApproachSection />
-      <PartnersSection />
-      <TeamSection />
+      {content.partnersVisible && <PartnersSection />}
+      {content.teamVisible && <TeamSection />}
       <ContactFooter />
 
       {/* Invisible Admin Toggle - Triple Click */}

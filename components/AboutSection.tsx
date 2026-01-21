@@ -19,20 +19,20 @@ const AboutSection: React.FC = () => {
                 <div className="max-w-4xl mx-auto space-y-12">
                     <div className="bg-white p-8 rounded-lg shadow-lg">
                         <h3 className="text-2xl font-bold text-pdi-dark-blue mb-4">Who We Are</h3>
-                        <p className="text-base text-pdi-gray leading-relaxed">
+                        <p className="text-base text-pdi-gray leading-relaxed whitespace-pre-line">
                             {content.about.whoWeAre}
                         </p>
                     </div>
 
                     <div className="bg-white p-8 rounded-lg shadow-lg">
                         <h3 className="text-2xl font-bold text-pdi-dark-blue mb-4">Our Mission</h3>
-                        <p className="text-base text-pdi-gray leading-relaxed">
+                        <p className="text-base text-pdi-gray leading-relaxed whitespace-pre-line">
                             {content.about.mission}
                         </p>
                     </div>
                     <div className="bg-white p-8 rounded-lg shadow-lg">
                         <h3 className="text-2xl font-bold text-pdi-dark-blue mb-4">Our Vision</h3>
-                        <p className="text-base text-pdi-gray leading-relaxed">
+                        <p className="text-base text-pdi-gray leading-relaxed whitespace-pre-line">
                             {content.about.vision}
                         </p>
                     </div>

@@ -11,7 +11,7 @@ const ApproachCard: React.FC<{ approach: Approach }> = ({ approach }) => (
         </div>
         <div>
             <h4 className="text-lg font-bold text-pdi-dark-blue">{approach.title}</h4>
-            <p className="text-pdi-gray mt-1">{approach.description}</p>
+            <p className="text-pdi-gray mt-1 whitespace-pre-line">{approach.description}</p>
         </div>
     </div>
 );
@@ -26,10 +26,10 @@ const ApproachSection: React.FC = () => {
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-extrabold text-pdi-dark-blue">
-                            Our Approach
+                            {content.approachTitle}
                         </h2>
-                        <p className="mt-4 text-lg text-pdi-gray">
-                            We believe in solutions that are co-designed, evidence-based, and built for sustainable impact.
+                        <p className="mt-4 text-lg text-pdi-gray whitespace-pre-line">
+                            {content.approachSubtitle}
                         </p>
                     </div>
                     <div className="grid md:grid-cols-2 gap-8">

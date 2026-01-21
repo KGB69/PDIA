@@ -338,6 +338,31 @@ const AdminDashboard: React.FC = () => {
 
                 {activeTab === 'services' && (
                     <div className="space-y-8">
+                        {/* Section Metadata */}
+                        <div className="p-6 border border-gray-200 rounded-xl bg-blue-50/30">
+                            <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Section Settings</h4>
+                            <div className="grid grid-cols-1 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
+                                    <input
+                                        type="text"
+                                        value={content.servicesTitle}
+                                        onChange={(e) => updateContent({ ...content, servicesTitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Subtitle</label>
+                                    <textarea
+                                        rows={2}
+                                        value={content.servicesSubtitle}
+                                        onChange={(e) => updateContent({ ...content, servicesSubtitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="flex justify-between items-center">
                             <h3 className="text-xl font-bold text-pdi-dark-blue">Services</h3>
                             <button
@@ -401,6 +426,43 @@ const AdminDashboard: React.FC = () => {
 
                 {activeTab === 'team' && (
                     <div className="space-y-8">
+                        {/* Section Metadata */}
+                        <div className="p-6 border border-gray-200 rounded-xl bg-blue-50/30">
+                            <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Section Settings</h4>
+                            <div className="grid grid-cols-1 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
+                                    <input
+                                        type="text"
+                                        value={content.teamTitle}
+                                        onChange={(e) => updateContent({ ...content, teamTitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Subtitle</label>
+                                    <textarea
+                                        rows={2}
+                                        value={content.teamSubtitle}
+                                        onChange={(e) => updateContent({ ...content, teamSubtitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        type="checkbox"
+                                        id="teamVisible"
+                                        checked={content.teamVisible}
+                                        onChange={(e) => updateContent({ ...content, teamVisible: e.target.checked })}
+                                        className="w-5 h-5 text-pdi-red focus:ring-pdi-red border-gray-300 rounded"
+                                    />
+                                    <label htmlFor="teamVisible" className="text-sm font-medium text-gray-700">
+                                        Show this section on homepage
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="flex justify-between items-center">
                             <h3 className="text-xl font-bold text-pdi-dark-blue">Team Members</h3>
                             <button
@@ -456,6 +518,31 @@ const AdminDashboard: React.FC = () => {
 
                 {activeTab === 'approach' && (
                     <div className="space-y-8">
+                        {/* Section Metadata */}
+                        <div className="p-6 border border-gray-200 rounded-xl bg-blue-50/30">
+                            <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Section Settings</h4>
+                            <div className="grid grid-cols-1 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
+                                    <input
+                                        type="text"
+                                        value={content.approachTitle}
+                                        onChange={(e) => updateContent({ ...content, approachTitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Subtitle</label>
+                                    <textarea
+                                        rows={2}
+                                        value={content.approachSubtitle}
+                                        onChange={(e) => updateContent({ ...content, approachSubtitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="flex justify-between items-center">
                             <h3 className="text-xl font-bold text-pdi-dark-blue">Our Approach</h3>
                             <button
@@ -519,6 +606,43 @@ const AdminDashboard: React.FC = () => {
 
                 {activeTab === 'partners' && (
                     <div className="space-y-8">
+                        {/* Section Metadata */}
+                        <div className="p-6 border border-gray-200 rounded-xl bg-blue-50/30">
+                            <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Section Settings</h4>
+                            <div className="grid grid-cols-1 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
+                                    <input
+                                        type="text"
+                                        value={content.partnersTitle}
+                                        onChange={(e) => updateContent({ ...content, partnersTitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Subtitle</label>
+                                    <textarea
+                                        rows={2}
+                                        value={content.partnersSubtitle}
+                                        onChange={(e) => updateContent({ ...content, partnersSubtitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        type="checkbox"
+                                        id="partnersVisible"
+                                        checked={content.partnersVisible}
+                                        onChange={(e) => updateContent({ ...content, partnersVisible: e.target.checked })}
+                                        className="w-5 h-5 text-pdi-red focus:ring-pdi-red border-gray-300 rounded"
+                                    />
+                                    <label htmlFor="partnersVisible" className="text-sm font-medium text-gray-700">
+                                        Show this section on homepage
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="flex justify-between items-center">
                             <h3 className="text-xl font-bold text-pdi-dark-blue">Partners</h3>
                             <button

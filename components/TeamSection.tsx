@@ -36,7 +36,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => {
         />
       </div>
       <h3 className="text-xl font-bold text-pdi-dark-blue">{member.name}</h3>
-      <p className="text-md text-pdi-gray mt-1">{member.role}</p>
+      <p className="text-md text-pdi-gray mt-1 whitespace-pre-line">{member.role}</p>
     </div>
   );
 };
@@ -50,10 +50,10 @@ const TeamSection: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-extrabold text-pdi-dark-blue">
-            Our Team of Experts
+            {content.teamTitle}
           </h2>
-          <p className="mt-4 text-lg text-pdi-gray max-w-2xl mx-auto">
-            A collective of experienced professionals dedicated to educational excellence.
+          <p className="mt-4 text-lg text-pdi-gray max-w-2xl mx-auto whitespace-pre-line">
+            {content.teamSubtitle}
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

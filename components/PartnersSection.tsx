@@ -21,10 +21,10 @@ const PartnersSection: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-extrabold text-pdi-dark-blue">
-            Who We Work With
+            {content.partnersTitle}
           </h2>
-          <p className="mt-4 text-lg text-pdi-gray max-w-2xl mx-auto">
-            Transforming education through strong partnerships and collaboration.
+          <p className="mt-4 text-lg text-pdi-gray max-w-2xl mx-auto whitespace-pre-line">
+            {content.partnersSubtitle}
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">

@@ -39,6 +39,19 @@ export interface About {
 }
 
 export interface Content {
+  // Section metadata
+  servicesTitle: string;
+  servicesSubtitle: string;
+  approachTitle: string;
+  approachSubtitle: string;
+  partnersTitle: string;
+  partnersSubtitle: string;
+  partnersVisible: boolean;
+  teamTitle: string;
+  teamSubtitle: string;
+  teamVisible: boolean;
+
+  // Content arrays
   navLinks: { name: string; href: string }[];
   branding: Branding;
   about: About;
