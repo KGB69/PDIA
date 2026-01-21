@@ -10,8 +10,8 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ensure uploads directory exists
-const uploadsDir = join(__dirname, 'dist', 'uploads');
+// Ensure uploads directory exists (outside dist to persist across builds)
+const uploadsDir = join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
     console.log('Creating uploads directory:', uploadsDir);
     fs.mkdirSync(uploadsDir, { recursive: true });
@@ -108,6 +108,10 @@ app.all('/api/*', (req, res) => {
 });
 
 // --- STATIC FILES AFTER API ---
+// Serve uploads directory (persistent across builds)
+app.use('/uploads', express.static(uploadsDir));
+
+// Serve built app
 app.use(express.static('dist'));
 
 // SPA Fallback
