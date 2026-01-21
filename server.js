@@ -85,14 +85,38 @@ app.post('/api/upload-image', (req, res) => {
 // Save Content Endpoint
 app.post('/api/save-content', express.json({ limit: '50mb' }), (req, res) => {
     console.log('Save content request received');
-    const contentPath = join(__dirname, 'dist', 'content.json');
+    // Save to persistent location (outside dist)
+    const contentPath = join(__dirname, 'content.json');
     try {
         fs.writeFileSync(contentPath, JSON.stringify(req.body, null, 2));
-        console.log('Content saved successfully');
+        console.log('Content saved successfully to:', contentPath);
         res.json({ success: true });
     } catch (error) {
         console.error('Error saving content:', error);
         res.status(500).json({ error: 'Failed to save content' });
+    }
+});
+
+// Get Content Endpoint (serves the persistent content.json)
+app.get('/api/content', (req, res) => {
+    const contentPath = join(__dirname, 'content.json');
+
+    // If persistent content.json doesn't exist, copy from dist (initial state)
+    if (!fs.existsSync(contentPath)) {
+        const distContentPath = join(__dirname, 'dist', 'content.json');
+        if (fs.existsSync(distContentPath)) {
+            fs.copyFileSync(distContentPath, contentPath);
+            console.log('Initialized content.json from dist');
+        }
+    }
+
+    try {
+        const content = fs.readFileSync(contentPath, 'utf8');
+        res.setHeader('Content-Type', 'application/json');
+        res.send(content);
+    } catch (error) {
+        console.error('Error reading content:', error);
+        res.status(500).json({ error: 'Failed to load content' });
     }
 });
 

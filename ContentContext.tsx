@@ -16,6 +16,28 @@ const ContentContext = createContext<ContentContextType | undefined>(undefined);
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [content, setContent] = useState<Content>(initialContent as Content);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Fetch content from API on mount (gets persistent content.json)
+    useEffect(() => {
+        const fetchContent = async () => {
+            try {
+                const response = await fetch('/api/content');
+                if (response.ok) {
+                    const data = await response.json();
+                    setContent(data);
+                    console.log('Loaded content from API');
+                } else {
+                    console.warn('Failed to load content from API, using default');
+                }
+            } catch (error) {
+                console.error('Error fetching content:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchContent();
+    }, []);
 
     const updateContent = (newContent: Content) => {
         setContent(newContent);
