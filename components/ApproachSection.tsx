@@ -7,7 +7,7 @@ import type { Approach } from '../types';
 const ApproachCard: React.FC<{ approach: Approach }> = ({ approach }) => (
     <div className="flex items-start space-x-4">
         <div className="flex-shrink-0 bg-pdi-red/10 p-3 rounded-full">
-            <IconRenderer iconName={approach.icon} className="w-8 h-8" />
+            <IconRenderer iconName={approach.icon} className="w-[75px] h-[75px]" />
         </div>
         <div>
             <h4 className="text-lg font-bold text-pdi-dark-blue">{approach.title}</h4>
