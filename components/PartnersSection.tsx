@@ -7,7 +7,7 @@ import type { Partner } from '../types';
 const PartnerCard: React.FC<{ partner: Partner }> = ({ partner }) => (
   <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 text-center">
     <div className="flex justify-center mb-4">
-      <IconRenderer iconName={partner.icon} className="w-10 h-10 text-pdi-red" />
+      <IconRenderer iconName={partner.icon} className="w-[75px] h-[75px] text-pdi-red" />
     </div>
     <h4 className="font-semibold text-pdi-dark-blue">{partner.name}</h4>
   </div>

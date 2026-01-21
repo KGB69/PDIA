@@ -45,7 +45,7 @@ interface IconRendererProps {
     className?: string;
 }
 
-const IconRenderer: React.FC<IconRendererProps> = ({ iconName, className = "w-10 h-10 mb-4" }) => {
+const IconRenderer: React.FC<IconRendererProps> = ({ iconName, className = "w-[75px] h-[75px] mb-4" }) => {
     // If iconName is a URL (starts with '/'), render it as an image
     if (iconName && iconName.startsWith('/')) {
         return <img src={iconName} className={className} alt="Icon" />;
