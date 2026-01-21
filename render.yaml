@@ -1,14 +1,9 @@
 services:
-  - type: static
-    name: pdia-website
+  - type: web
+    name: pdia
+    env: node
     buildCommand: npm install && npm run build
-    publishDir: ./dist
-    pullRequestPreviewsEnabled: true
-    headers:
-      - path: /*
-        name: Cache-Control
-        value: public, max-age=0, must-revalidate
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 24
