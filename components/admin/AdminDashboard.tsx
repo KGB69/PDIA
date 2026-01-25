@@ -913,24 +913,40 @@ const AdminDashboard: React.FC<{ onLogout?: () => void }> = ({ onLogout }) => {
 
                                 {/* Recent Visitors */}
                                 <div className="bg-white border border-gray-200 rounded-xl p-6">
-                                    <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Recent Visitors (Last 50)</h4>
+                                    <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Recent Visitors (Last 500)</h4>
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-sm">
                                             <thead className="bg-gray-50 border-b border-gray-200">
                                                 <tr>
                                                     <th className="text-left p-3 font-semibold text-gray-700">Time</th>
+                                                    <th className="text-left p-3 font-semibold text-gray-700">IP Address</th>
                                                     <th className="text-left p-3 font-semibold text-gray-700">Page</th>
                                                     <th className="text-left p-3 font-semibold text-gray-700">Referrer</th>
-                                                    <th className="text-left p-3 font-semibold text-gray-700">IP Hash</th>
+                                                    <th className="text-left p-3 font-semibold text-gray-700">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {analytics.recentVisitors.map((visitor: any, idx: number) => (
-                                                    <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50">
+                                                    <tr
+                                                        key={idx}
+                                                        className={`border-b border-gray-100 hover:bg-gray-50 ${visitor.isMalicious || visitor.isBlacklisted ? 'bg-red-50' : ''
+                                                            }`}
+                                                    >
                                                         <td className="p-3 text-gray-600">{new Date(visitor.timestamp).toLocaleString()}</td>
+                                                        <td className="p-3 font-mono text-gray-700 font-semibold">{visitor.ip}</td>
                                                         <td className="p-3 font-mono text-gray-700">{visitor.path}</td>
                                                         <td className="p-3 text-gray-600 truncate max-w-xs">{visitor.referrer}</td>
-                                                        <td className="p-3 font-mono text-xs text-gray-500">{visitor.ipHash}</td>
+                                                        <td className="p-3">
+                                                            {visitor.isMalicious || visitor.isBlacklisted ? (
+                                                                <span className="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
+                                                                    🚫 THREAT
+                                                                </span>
+                                                            ) : (
+                                                                <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold">
+                                                                    ✓ Safe
+                                                                </span>
+                                                            )}
+                                                        </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
