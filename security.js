@@ -141,6 +141,18 @@ function isMaliciousRequest(req) {
 export function securityMiddleware(req, res, next) {
     const ip = req.ip || req.connection.remoteAddress;
 
+    // CRITICAL: Skip security checks for static assets
+    if (
+        req.path.startsWith('/assets/') ||
+        req.path.startsWith('/uploads/') ||
+        req.path.startsWith('/api/') ||
+        req.path === '/' ||
+        req.path === '/index.html' ||
+        req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|webp|ttf|eot|otf|map|json)$/i)
+    ) {
+        return next();
+    }
+
     // Check blacklist
     if (isBlacklisted(ip)) {
         console.log(`🚫 Blocked blacklisted IP: ${ip} - ${req.path}`);
