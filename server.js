@@ -3,7 +3,9 @@ import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs';
+import cookieParser from 'cookie-parser';
 import { logVisitor, getAnalyticsStats } from './analytics.js';
+import { verifyPassword, generateToken, isLockedOut, recordFailedAttempt, clearLoginAttempts, requireAuth } from './auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -39,6 +41,9 @@ app.use((req, res, next) => {
     next();
 });
 
+// Cookie parser middleware
+app.use(cookieParser());
+
 // Configure multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -69,8 +74,8 @@ app.get('/api/debug', (req, res) => {
     });
 });
 
-// Image Upload Endpoint
-app.post('/api/upload-image', (req, res) => {
+// Upload Endpoint (protected)
+app.post('/api/upload', requireAuth, (req, res, next) => {
     console.log('=== UPLOAD REQUEST START ===');
     console.log('Query params:', req.query);
     console.log('Content-Type:', req.headers['content-type']);
@@ -96,8 +101,8 @@ app.post('/api/upload-image', (req, res) => {
     });
 });
 
-// Save Content Endpoint
-app.post('/api/save-content', express.json({ limit: '50mb' }), (req, res) => {
+// Save Content Endpoint (protected)
+app.post('/api/save-content', requireAuth, express.json({ limit: '50mb' }), (req, res) => {
     console.log('Save content request received');
     // Save to persistent disk location
     const contentPath = join(dataDir, 'content.json');
@@ -134,8 +139,60 @@ app.get('/api/content', (req, res) => {
     }
 });
 
-// Analytics Stats Endpoint
-app.get('/api/analytics/stats', (req, res) => {
+// Authentication Endpoints
+
+// Login
+app.post('/api/auth/login', express.json(), async (req, res) => {
+    const ip = req.ip || req.connection.remoteAddress;
+
+    // Check if locked out
+    if (isLockedOut(ip)) {
+        return res.status(429).json({ error: 'Too many failed attempts. Please try again in 15 minutes.' });
+    }
+
+    const { password } = req.body;
+
+    if (!password) {
+        return res.status(400).json({ error: 'Password required' });
+    }
+
+    const isValid = await verifyPassword(password);
+
+    if (!isValid) {
+        recordFailedAttempt(ip);
+        return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    // Clear failed attempts on success
+    clearLoginAttempts(ip);
+
+    // Generate JWT token
+    const token = generateToken();
+
+    // Set secure cookie
+    res.cookie('adminToken', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 30 * 60 * 1000 // 30 minutes
+    });
+
+    res.json({ success: true });
+});
+
+// Logout
+app.post('/api/auth/logout', (req, res) => {
+    res.clearCookie('adminToken');
+    res.json({ success: true });
+});
+
+// Verify session
+app.get('/api/auth/verify', requireAuth, (req, res) => {
+    res.json({ authenticated: true });
+});
+
+// Analytics Stats Endpoint (protected)
+app.get('/api/analytics/stats', requireAuth, (req, res) => {
     try {
         const stats = getAnalyticsStats();
         res.json(stats);

@@ -69,7 +69,7 @@ const ImageUpload: React.FC<{
     );
 };
 
-const AdminDashboard: React.FC = () => {
+const AdminDashboard: React.FC<{ onLogout?: () => void }> = ({ onLogout }) => {
     const { content, updateContent, saveChanges } = useContent();
     const [activeTab, setActiveTab] = useState('branding');
     const [analytics, setAnalytics] = useState<any>(null);
@@ -243,13 +243,23 @@ const AdminDashboard: React.FC = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 py-12">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-pdi-dark-blue">Mini CMS Admin</h1>
-                <button
-                    onClick={saveChanges}
-                    className="bg-pdi-red text-white px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition-colors shadow-sm"
-                >
-                    Save All Changes
-                </button>
+                <h1 className="text-3xl font-bold text-pdi-dark-blue">BBox Admin</h1>
+                <div className="flex gap-3">
+                    {onLogout && (
+                        <button
+                            onClick={onLogout}
+                            className="bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors shadow-sm"
+                        >
+                            🚪 Logout
+                        </button>
+                    )}
+                    <button
+                        onClick={saveChanges}
+                        className="bg-pdi-red text-white px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition-colors shadow-sm"
+                    >
+                        Save All Changes
+                    </button>
+                </div>
             </div>
 
             <div className="flex border-b border-gray-200 mb-8 overflow-x-auto scrollbar-hide">

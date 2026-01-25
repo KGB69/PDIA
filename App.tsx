@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
@@ -10,11 +10,33 @@ import GallerySection from './components/GallerySection';
 import ContactFooter from './components/ContactFooter';
 import { ContentProvider, useContent } from './ContentContext';
 import AdminDashboard from './components/admin/AdminDashboard';
+import LoginPage from './components/LoginPage';
 
 const AppContent: React.FC = () => {
   const { isAdmin, setIsAdmin, content } = useContent();
   const [clickCount, setClickCount] = React.useState(0);
   const [lastClickTime, setLastClickTime] = React.useState(0);
+  const [showLogin, setShowLogin] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [checkingAuth, setCheckingAuth] = React.useState(true);
+
+  // Check authentication status on mount
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/auth/verify');
+      if (response.ok) {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.log('Not authenticated');
+    } finally {
+      setCheckingAuth(false);
+    }
+  };
 
   const handleAdminToggle = () => {
     const now = Date.now();
@@ -28,15 +50,38 @@ const AppContent: React.FC = () => {
 
     setLastClickTime(now);
 
-    // Toggle admin mode on triple click
+    // Show login on triple click
     if (clickCount >= 2) {
-      setIsAdmin(!isAdmin);
+      setShowLogin(true);
       setClickCount(0);
     }
   };
 
-  if (isAdmin) {
-    return <AdminDashboard />;
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    setShowLogin(false);
+    setIsAdmin(true);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setIsAuthenticated(false);
+      setIsAdmin(false);
+      setShowLogin(false);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  // Show login page if triggered
+  if (showLogin && !isAuthenticated) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  // Show admin dashboard if authenticated and admin mode is on
+  if (isAdmin && isAuthenticated) {
+    return <AdminDashboard onLogout={handleLogout} />;
   }
 
   return (
@@ -51,7 +96,7 @@ const AppContent: React.FC = () => {
       {content.teamVisible && <TeamSection />}
       <ContactFooter />
 
-      {/* Invisible Admin Toggle - Triple Click */}
+      {/* Invisible Admin Toggle - Triple Click (BBox) */}
       <button
         onClick={handleAdminToggle}
         className="fixed bottom-4 right-4 w-12 h-12 rounded-full bg-transparent hover:bg-gray-100/10 transition-all duration-300 opacity-0 hover:opacity-20 cursor-default z-50"
