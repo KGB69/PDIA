@@ -141,7 +141,7 @@ function isMaliciousRequest(req) {
 export function securityMiddleware(req, res, next) {
     const ip = req.ip || req.connection.remoteAddress;
 
-    // CRITICAL: Skip security checks for static assets
+    // CRITICAL: Skip security checks for static assets and legitimate paths
     if (
         req.path.startsWith('/assets/') ||
         req.path.startsWith('/uploads/') ||
@@ -153,7 +153,16 @@ export function securityMiddleware(req, res, next) {
         return next();
     }
 
-    // Check blacklist
+    // IMPORTANT: Don't block access to authentication endpoints
+    // Users should always be able to attempt login
+    if (
+        req.path.startsWith('/api/auth/') ||
+        req.path === '/api/emergency-unlock'
+    ) {
+        return next();
+    }
+
+    // Check blacklist (only for non-auth requests)
     if (isBlacklisted(ip)) {
         console.log(`🚫 Blocked blacklisted IP: ${ip} - ${req.path}`);
         return res.status(403).send('Forbidden');
