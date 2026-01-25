@@ -233,7 +233,7 @@ const AdminDashboard: React.FC<{ onLogout?: () => void }> = ({ onLogout }) => {
         }
     };
 
-    const handleBrandingChange = (field: string, value: string) => {
+    const handleBrandingChange = (field: string, value: string | number) => {
         updateContent({
             ...content,
             branding: { ...content.branding, [field]: value }
@@ -281,16 +281,54 @@ const AdminDashboard: React.FC<{ onLogout?: () => void }> = ({ onLogout }) => {
                         <section>
                             <h3 className="text-xl font-bold text-pdi-dark-blue mb-4">Logo Management</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <ImageUpload
-                                    label="Top Navigation Logo"
-                                    currentImage={content.branding.logoTop}
-                                    onUpload={(url) => handleBrandingChange('logoTop', url)}
-                                />
-                                <ImageUpload
-                                    label="Footer Logo"
-                                    currentImage={content.branding.logoBottom}
-                                    onUpload={(url) => handleBrandingChange('logoBottom', url)}
-                                />
+                                <div>
+                                    <ImageUpload
+                                        label="Top Navigation Logo"
+                                        currentImage={content.branding.logoTop}
+                                        onUpload={(url) => handleBrandingChange('logoTop', url)}
+                                    />
+                                    <div className="mt-4">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Header Logo Size</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {[32, 48, 64, 80, 100, 120, 150].map(size => (
+                                                <button
+                                                    key={size}
+                                                    onClick={() => handleBrandingChange('logoTopSize', size)}
+                                                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${content.branding.logoTopSize === size
+                                                        ? 'bg-pdi-red text-white'
+                                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                        }`}
+                                                >
+                                                    {size}px
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <ImageUpload
+                                        label="Footer Logo"
+                                        currentImage={content.branding.logoBottom}
+                                        onUpload={(url) => handleBrandingChange('logoBottom', url)}
+                                    />
+                                    <div className="mt-4">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Footer Logo Size</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {[64, 80, 100, 120, 150, 180, 200, 250].map(size => (
+                                                <button
+                                                    key={size}
+                                                    onClick={() => handleBrandingChange('logoBottomSize', size)}
+                                                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${content.branding.logoBottomSize === size
+                                                        ? 'bg-pdi-red text-white'
+                                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                        }`}
+                                                >
+                                                    {size}px
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     </div>

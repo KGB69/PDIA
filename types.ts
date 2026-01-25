@@ -34,6 +34,8 @@ export interface GalleryImage {
 export interface Branding {
   logoTop: string;
   logoBottom: string;
+  logoTopSize: number;      // Size in pixels (32-250)
+  logoBottomSize: number;   // Size in pixels (32-250)
 }
 
 export interface About {

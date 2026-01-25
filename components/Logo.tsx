@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Logo: React.FC<{ src?: string; className?: string }> = ({ src, className }) => {
+const Logo: React.FC<{ src?: string; className?: string; style?: React.CSSProperties }> = ({ src, className, style }) => {
   if (!src) return null;
 
   return (
@@ -8,6 +8,7 @@ const Logo: React.FC<{ src?: string; className?: string }> = ({ src, className }
       src={src}
       alt="PDIA Logo"
       className={className || "h-16 w-auto max-w-[250px] object-contain"}
+      style={style}
     />
   );
 };

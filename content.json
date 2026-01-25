@@ -11,7 +11,9 @@
   ],
   "branding": {
     "logoTop": "/uploads/1768917977598-logo.png",
-    "logoBottom": "/uploads/1768917103354-NEW_PDIA_LOGO.jpg"
+    "logoBottom": "/uploads/1768917103354-NEW_PDIA_LOGO.jpg",
+    "logoTopSize": 64,
+    "logoBottomSize": 150
   },
   "services": [
     {
