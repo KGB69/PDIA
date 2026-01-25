@@ -10,8 +10,15 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ensure uploads directory exists (outside dist to persist across builds)
-const uploadsDir = join(__dirname, 'uploads');
+// Use persistent disk if available (production), otherwise local directory (development)
+const isPersistentDiskAvailable = fs.existsSync('/data');
+const dataDir = isPersistentDiskAvailable ? '/data' : __dirname;
+
+console.log(`Using data directory: ${dataDir}`);
+console.log(`Persistent disk available: ${isPersistentDiskAvailable}`);
+
+// Ensure uploads directory exists
+const uploadsDir = join(dataDir, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
     console.log('Creating uploads directory:', uploadsDir);
     fs.mkdirSync(uploadsDir, { recursive: true });
@@ -85,8 +92,8 @@ app.post('/api/upload-image', (req, res) => {
 // Save Content Endpoint
 app.post('/api/save-content', express.json({ limit: '50mb' }), (req, res) => {
     console.log('Save content request received');
-    // Save to persistent location (outside dist)
-    const contentPath = join(__dirname, 'content.json');
+    // Save to persistent disk location
+    const contentPath = join(dataDir, 'content.json');
     try {
         fs.writeFileSync(contentPath, JSON.stringify(req.body, null, 2));
         console.log('Content saved successfully to:', contentPath);
