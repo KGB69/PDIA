@@ -187,6 +187,7 @@ const AdminDashboard: React.FC = () => {
 
     // Gallery CRUD
     const handleGalleryChange = (index: number, field: string, value: string) => {
+        if (!content.gallery) return;
         const newGallery = [...content.gallery];
         newGallery[index] = { ...newGallery[index], [field]: value };
         updateContent({ ...content, gallery: newGallery });
@@ -198,10 +199,12 @@ const AdminDashboard: React.FC = () => {
             caption: 'New gallery image',
             alt: 'Gallery image description'
         };
-        updateContent({ ...content, gallery: [...content.gallery, newImage] });
+        const currentGallery = content.gallery || [];
+        updateContent({ ...content, gallery: [...currentGallery, newImage] });
     };
 
     const deleteGalleryImage = (index: number) => {
+        if (!content.gallery) return;
         if (confirm('Are you sure you want to delete this image?')) {
             const newGallery = content.gallery.filter((_, i) => i !== index);
             updateContent({ ...content, gallery: newGallery });
@@ -766,7 +769,7 @@ const AdminDashboard: React.FC = () => {
                                 + Add Image
                             </button>
                         </div>
-                        {content.gallery.map((item, idx) => (
+                        {content.gallery && content.gallery.map((item, idx) => (
                             <div key={idx} className="p-6 border border-gray-100 rounded-xl bg-gray-50/50 relative">
                                 <button
                                     onClick={() => deleteGalleryImage(idx)}

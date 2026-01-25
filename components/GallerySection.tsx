@@ -40,7 +40,7 @@ const GallerySection: React.FC = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [lightboxOpen, currentImageIndex]);
 
-    if (content.gallery.length === 0) return null;
+    if (!content.gallery || content.gallery.length === 0) return null;
 
     return (
         <section id="gallery" className="py-20 bg-white scroll-mt-20">
