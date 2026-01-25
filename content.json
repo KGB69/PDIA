@@ -48,85 +48,47 @@
     },
     {
       "icon": "PolicyAndTransformation",
-      "title": "Policy and Transformation",
-      "description": "We advocate for transformation of education systems, ownership and adoption of evidence-based innovation in the education system. We offer technical support for institutionalization of methodologies at school, district local governments and national develop to ensure scale-up and sustainability of innovations by governments."
+      "title": "Policy Advocacy & Transformation",
+      "description": "We support governments and institutions to develop, review, and implement education policies that are inclusive, evidence-based, and aligned with national and global education goals."
     }
   ],
   "team": [
     {
-      "name": "DR. GRACE KIIRIA",
-      "role": "Expert in Educational Development, Management and Administration",
-      "image": "/uploads/1768920969943-Grace_Kiiria.jpg"
+      "name": "Moses Tuhame",
+      "role": "CEO & Lead Consultant",
+      "image": "/uploads/1768921468709-Moses_Tuhame.jpg"
     },
     {
-      "name": "MR. MOSES TUHAME",
-      "role": "Expert in ICT",
-      "image": "/images/team/Moses Tuhame.jpg"
-    },
-    {
-      "name": "MS. RACHAEL KALEMBE",
-      "role": "Educationist and Professional trainer",
-      "image": "/images/team/racheal_kalembe.jpg"
-    },
-    {
-      "name": "MR. NAIGO PAUL",
-      "role": "Expert in school leadership and teacher training",
-      "image": "/images/team/naigo Paul.jpg"
-    },
-    {
-      "name": "MR. OMODING JONATHAN OKIA",
-      "role": "Graphics & Product Design Lead",
-      "image": "/images/team/Omoding Jonathan Okia .jpg"
+      "name": "Racheal Kalembe",
+      "role": "Senior Education Consultant",
+      "image": "/uploads/1768921476243-racheal_kalembe.jpg"
     }
   ],
   "approach": [
     {
-      "icon": "/uploads/1768920991998-Moses_Tuhame.jpg",
       "title": "Participatory & Contextualized",
-      "description": "We co-design solutions with clients and communities to ensure relevance and sustainability."
-    },
-    {
-      "icon": "BeakerIcon",
-      "title": "Evidence-Based",
-      "description": "Our recommendations and training draw from global research, best practices, and local realities."
-    },
-    {
-      "icon": "CpuChipIcon",
-      "title": "Technology-Enabled",
-      "description": "We promote digital solutions where they can increase reach, efficiency, and engagement."
-    },
-    {
-      "icon": "CapacityFocused",
-      "title": "Capacity-Focused",
-      "description": "We empower clients and beneficiaries with the tools and skills they need to lead and sustain change."
+      "description": "We co-design solutions with clients and communities to ensure relevance and sustainability.",
+      "icon": "/uploads/1768921468709-Moses_Tuhame.jpg"
     }
   ],
   "partners": [
     {
-      "name": "Ministries of Education and Government Agencies",
+      "name": "Ministry of Education",
       "icon": "AcademicCapIcon"
     },
     {
-      "name": "Non-Governmental Organizations (NGOs)",
-      "icon": "NGOs"
+      "name": "UNESCO",
+      "icon": "GlobeAltIcon"
     },
     {
-      "name": "Schools and Teacher Training Institutions",
-      "icon": "BookOpenIcon"
-    },
-    {
-      "name": "Development Partners and Donors",
-      "icon": "DevelopmentPartners"
-    },
-    {
-      "name": "Community-Based Organizations",
-      "icon": "CommunityOrganizations"
+      "name": "Local NGOs",
+      "icon": "UserGroupIcon"
     }
   ],
   "contactInfo": {
-    "email": "pdiaconsultancy@gmail.com",
-    "phone": "+256 772 193 208",
-    "address": "Mutebbi Rd Seeta. Mukono"
+    "email": "info@pdialtd.com",
+    "phone": "+256 123 456 789",
+    "address": "Kampala, Uganda"
   },
   "about": {
     "title": "About PDIA",
@@ -144,5 +106,20 @@
   "partnersVisible": true,
   "teamTitle": "Our Team",
   "teamSubtitle": "Meet the dedicated professionals driving educational transformation across Africa.",
-  "teamVisible": true
+  "teamVisible": true,
+  "galleryTitle": "Our Gallery",
+  "gallerySubtitle": "Showcasing our impact and community work",
+  "galleryVisible": true,
+  "gallery": [
+    {
+      "image": "/placeholder-gallery.jpg",
+      "caption": "Community workshop in action",
+      "alt": "Community members participating in a workshop"
+    },
+    {
+      "image": "/placeholder-gallery.jpg",
+      "caption": "Youth leadership training",
+      "alt": "Young leaders during training session"
+    }
+  ]
 }

@@ -205,7 +205,7 @@ const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="flex border-b border-gray-200 mb-8 overflow-x-auto scrollbar-hide">
-                {['branding', 'about', 'navigation', 'services', 'team', 'approach', 'partners', 'contact'].map((tab) => (
+                {['branding', 'about', 'navigation', 'services', 'team', 'approach', 'partners', 'gallery', 'contact'].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
@@ -686,6 +686,98 @@ const AdminDashboard: React.FC = () => {
                                                 onChange={(e) => handlePartnerChange(idx, 'icon', e.target.value)}
                                                 className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
                                                 placeholder="e.g. AcademicCapIcon"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {activeTab === 'gallery' && (
+                    <div className="space-y-8">
+                        {/* Section Metadata */}
+                        <div className="p-6 border border-gray-200 rounded-xl bg-blue-50/30">
+                            <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Section Settings</h4>
+                            <div className="grid grid-cols-1 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
+                                    <input
+                                        type="text"
+                                        value={content.galleryTitle}
+                                        onChange={(e) => updateContent({ ...content, galleryTitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Section Subtitle</label>
+                                    <textarea
+                                        rows={2}
+                                        value={content.gallerySubtitle}
+                                        onChange={(e) => updateContent({ ...content, gallerySubtitle: e.target.value })}
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                    />
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <input
+                                        type="checkbox"
+                                        id="galleryVisible"
+                                        checked={content.galleryVisible}
+                                        onChange={(e) => updateContent({ ...content, galleryVisible: e.target.checked })}
+                                        className="w-5 h-5 text-pdi-red focus:ring-pdi-red border-gray-300 rounded"
+                                    />
+                                    <label htmlFor="galleryVisible" className="text-sm font-medium text-gray-700">
+                                        Show this section on homepage
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                            <h3 className="text-xl font-bold text-pdi-dark-blue">Gallery Images</h3>
+                            <button
+                                onClick={addGalleryImage}
+                                className="bg-pdi-red text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-opacity-90 transition-colors"
+                            >
+                                + Add Image
+                            </button>
+                        </div>
+                        {content.gallery.map((item, idx) => (
+                            <div key={idx} className="p-6 border border-gray-100 rounded-xl bg-gray-50/50 relative">
+                                <button
+                                    onClick={() => deleteGalleryImage(idx)}
+                                    className="absolute top-4 right-4 text-red-600 hover:text-red-800 font-bold"
+                                    title="Delete"
+                                >
+                                    ✕
+                                </button>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pr-8">
+                                    <div className="space-y-4">
+                                        <ImageUpload
+                                            label="Gallery Image"
+                                            currentImage={item.image}
+                                            onUpload={(url) => handleGalleryChange(idx, 'image', url)}
+                                            uniqueId={`gallery-image-${idx}`}
+                                        />
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Caption (Optional)</label>
+                                            <input
+                                                type="text"
+                                                value={item.caption || ''}
+                                                onChange={(e) => handleGalleryChange(idx, 'caption', e.target.value)}
+                                                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                                placeholder="Brief description of the image"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Alt Text (Required)</label>
+                                            <input
+                                                type="text"
+                                                value={item.alt}
+                                                onChange={(e) => handleGalleryChange(idx, 'alt', e.target.value)}
+                                                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-pdi-red focus:border-pdi-red transition-all"
+                                                placeholder="Describe the image for accessibility"
                                             />
                                         </div>
                                     </div>

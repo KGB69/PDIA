@@ -25,6 +25,12 @@ export interface Partner {
   icon: string;
 }
 
+export interface GalleryImage {
+  image: string;
+  caption?: string;
+  alt: string;
+}
+
 export interface Branding {
   logoTop: string;
   logoBottom: string;
@@ -50,6 +56,9 @@ export interface Content {
   teamTitle: string;
   teamSubtitle: string;
   teamVisible: boolean;
+  galleryTitle: string;
+  gallerySubtitle: string;
+  galleryVisible: boolean;
 
   // Content arrays
   navLinks: { name: string; href: string }[];
@@ -59,6 +68,7 @@ export interface Content {
   team: TeamMember[];
   approach: Approach[];
   partners: Partner[];
+  gallery: GalleryImage[];
   contactInfo: {
     email: string;
     phone: string;

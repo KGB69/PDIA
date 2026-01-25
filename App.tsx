@@ -6,6 +6,7 @@ import ServicesSection from './components/ServicesSection';
 import ApproachSection from './components/ApproachSection';
 import PartnersSection from './components/PartnersSection';
 import TeamSection from './components/TeamSection';
+import GallerySection from './components/GallerySection';
 import ContactFooter from './components/ContactFooter';
 import { ContentProvider, useContent } from './ContentContext';
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -45,6 +46,7 @@ const AppContent: React.FC = () => {
       <AboutSection />
       <ServicesSection />
       <ApproachSection />
+      {content.galleryVisible && <GallerySection />}
       {content.partnersVisible && <PartnersSection />}
       {content.teamVisible && <TeamSection />}
       <ContactFooter />
