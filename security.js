@@ -177,12 +177,30 @@ export function getBlacklistData() {
 // Clear login attempts (emergency unlock)
 export function emergencyUnlock() {
     const loginAttemptsFile = join(dataDir, 'login-attempts.json');
+    let cleared = false;
+
+    // Clear login attempts
     if (fs.existsSync(loginAttemptsFile)) {
         fs.writeFileSync(loginAttemptsFile, JSON.stringify({ attempts: {} }, null, 2));
         console.log('🔓 Emergency unlock: Login attempts cleared');
-        return true;
+        cleared = true;
     }
-    return false;
+
+    // Clear blacklist
+    if (fs.existsSync(blacklistFile)) {
+        fs.writeFileSync(blacklistFile, JSON.stringify({ ips: [], autoBlocked: [] }, null, 2));
+        console.log('🔓 Emergency unlock: IP blacklist cleared');
+        cleared = true;
+    }
+
+    // Clear suspicious activity
+    if (fs.existsSync(suspiciousFile)) {
+        fs.writeFileSync(suspiciousFile, JSON.stringify({ requests: [] }, null, 2));
+        console.log('🔓 Emergency unlock: Suspicious activity cleared');
+        cleared = true;
+    }
+
+    return cleared;
 }
 
 // Initialize on module load
