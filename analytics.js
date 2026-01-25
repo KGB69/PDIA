@@ -44,19 +44,22 @@ export function logVisitor(req) {
 
         const visitorLog = {
             timestamp: new Date().toISOString(),
-            ipHash: hashIP(req.ip || req.connection.remoteAddress || 'unknown'),
+            ip: req.ip || req.connection.remoteAddress || 'unknown', // Store actual IP
             userAgent: req.headers['user-agent'] || 'unknown',
             path: req.path,
             referrer: req.headers['referer'] || 'direct',
-            method: req.method
+            method: req.method,
+            // Security flags (will be set by security module)
+            isMalicious: false,
+            isBlacklisted: false
         };
 
         data.visitors.push(visitorLog);
 
-        // Rotate logs if older than 90 days
-        const ninetyDaysAgo = new Date();
-        ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-        data.visitors = data.visitors.filter(v => new Date(v.timestamp) > ninetyDaysAgo);
+        // Keep last 10,000 entries (increased for security monitoring)
+        if (data.visitors.length > 10000) {
+            data.visitors = data.visitors.slice(-10000);
+        }
 
         fs.writeFileSync(analyticsFile, JSON.stringify(data, null, 2));
     } catch (error) {
@@ -81,11 +84,11 @@ export function getAnalyticsStats() {
         const weekVisitors = visitors.filter(v => new Date(v.timestamp) >= thisWeek);
         const monthVisitors = visitors.filter(v => new Date(v.timestamp) >= thisMonth);
 
-        // Unique visitors (by IP hash)
-        const uniqueToday = new Set(todayVisitors.map(v => v.ipHash)).size;
-        const uniqueWeek = new Set(weekVisitors.map(v => v.ipHash)).size;
-        const uniqueMonth = new Set(monthVisitors.map(v => v.ipHash)).size;
-        const uniqueAllTime = new Set(visitors.map(v => v.ipHash)).size;
+        // Unique visitors (by actual IP for security monitoring)
+        const uniqueToday = new Set(todayVisitors.map(v => v.ip)).size;
+        const uniqueWeek = new Set(weekVisitors.map(v => v.ip)).size;
+        const uniqueMonth = new Set(monthVisitors.map(v => v.ip)).size;
+        const uniqueAllTime = new Set(visitors.map(v => v.ip)).size;
 
         // Top pages
         const pageCounts = {};
@@ -101,14 +104,21 @@ export function getAnalyticsStats() {
         const referrerCounts = {};
         visitors.forEach(v => {
             if (v.referrer !== 'direct') {
-                const url = new URL(v.referrer).hostname;
-                referrerCounts[url] = (referrerCounts[url] || 0) + 1;
+                try {
+                    const url = new URL(v.referrer).hostname;
+                    referrerCounts[url] = (referrerCounts[url] || 0) + 1;
+                } catch (e) {
+                    // Invalid URL, skip
+                }
             }
         });
         const topReferrers = Object.entries(referrerCounts)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 10)
             .map(([referrer, count]) => ({ referrer, count }));
+
+        // Flag malicious visitors
+        const maliciousVisitors = visitors.filter(v => v.isMalicious || v.isBlacklisted);
 
         return {
             totalPageViews: visitors.length,
@@ -125,7 +135,9 @@ export function getAnalyticsStats() {
             },
             topPages,
             topReferrers,
-            recentVisitors: visitors.slice(-50).reverse() // Last 50 visitors
+            recentVisitors: visitors.slice(-500).reverse(), // Last 500 visitors (increased)
+            maliciousVisitors: maliciousVisitors.slice(-100).reverse(), // Last 100 malicious
+            totalMalicious: maliciousVisitors.length
         };
     } catch (error) {
         console.error('Error getting analytics stats:', error);
