@@ -1,15 +1,14 @@
-
 import React from 'react';
 
-const Logo: React.FC<{ className?: string; src?: string }> = ({ className = '', src }) => {
+const Logo: React.FC<{ src?: string; className?: string }> = ({ src, className }) => {
+  if (!src) return null;
+
   return (
-    <div className={className}>
-      <img
-        src={src || "/icons/logo.png"}
-        alt="PDIA LTD Logo"
-        className="max-h-[100px] max-w-[100px] h-auto w-auto object-contain"
-      />
-    </div>
+    <img
+      src={src}
+      alt="PDIA Logo"
+      className={className || "h-16 w-auto max-w-[250px] object-contain"}
+    />
   );
 };
 

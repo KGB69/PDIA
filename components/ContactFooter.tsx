@@ -30,7 +30,7 @@ const ContactFooter: React.FC = () => {
                 <div className="grid md:grid-cols-3 gap-12 text-center md:text-left">
                     <div className="md:col-span-1">
                         <div className="flex justify-center md:justify-start mb-4">
-                            <Logo src={content.branding.logoBottom} />
+                            <Logo src={content.branding.logoBottom} className="h-auto w-auto max-w-[250px] max-h-[250px] object-contain" />
                         </div>
                         <p className="text-gray-400">Redefining education through locally relevant, globally informed, and technology-enhanced solutions.</p>
                     </div>
