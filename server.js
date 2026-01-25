@@ -3,6 +3,7 @@ import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs';
+import { logVisitor, getAnalyticsStats } from './analytics.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -29,6 +30,12 @@ if (!fs.existsSync(uploadsDir)) {
 // Global request logger
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Content-Type: ${req.headers['content-type']}`);
+    next();
+});
+
+// Analytics tracking middleware
+app.use((req, res, next) => {
+    logVisitor(req);
     next();
 });
 
@@ -124,6 +131,17 @@ app.get('/api/content', (req, res) => {
     } catch (error) {
         console.error('Error reading content:', error);
         res.status(500).json({ error: 'Failed to load content' });
+    }
+});
+
+// Analytics Stats Endpoint
+app.get('/api/analytics/stats', (req, res) => {
+    try {
+        const stats = getAnalyticsStats();
+        res.json(stats);
+    } catch (error) {
+        console.error('Error fetching analytics:', error);
+        res.status(500).json({ error: 'Failed to fetch analytics' });
     }
 });
 

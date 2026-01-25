@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useContent } from '../../ContentContext';
 
 const ImageUpload: React.FC<{
@@ -72,6 +72,28 @@ const ImageUpload: React.FC<{
 const AdminDashboard: React.FC = () => {
     const { content, updateContent, saveChanges } = useContent();
     const [activeTab, setActiveTab] = useState('branding');
+    const [analytics, setAnalytics] = useState<any>(null);
+    const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+
+    // Fetch analytics when analytics tab is opened
+    useEffect(() => {
+        if (activeTab === 'analytics' && !analytics) {
+            fetchAnalytics();
+        }
+    }, [activeTab]);
+
+    const fetchAnalytics = async () => {
+        setLoadingAnalytics(true);
+        try {
+            const response = await fetch('/api/analytics/stats');
+            const data = await response.json();
+            setAnalytics(data);
+        } catch (error) {
+            console.error('Error fetching analytics:', error);
+        } finally {
+            setLoadingAnalytics(false);
+        }
+    };
 
     // Services CRUD
     const handleServicesChange = (index: number, field: string, value: any) => {
@@ -231,7 +253,7 @@ const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="flex border-b border-gray-200 mb-8 overflow-x-auto scrollbar-hide">
-                {['branding', 'about', 'navigation', 'services', 'team', 'approach', 'partners', 'gallery', 'contact'].map((tab) => (
+                {['branding', 'about', 'navigation', 'services', 'team', 'approach', 'partners', 'gallery', 'analytics', 'contact'].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
@@ -810,6 +832,107 @@ const AdminDashboard: React.FC = () => {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                )}
+
+                {activeTab === 'analytics' && (
+                    <div className="space-y-8">
+                        <div className="flex justify-between items-center">
+                            <h3 className="text-xl font-bold text-pdi-dark-blue">Visitor Analytics</h3>
+                            <button
+                                onClick={fetchAnalytics}
+                                className="bg-pdi-red text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-opacity-90 transition-colors"
+                            >
+                                🔄 Refresh
+                            </button>
+                        </div>
+
+                        {loadingAnalytics ? (
+                            <div className="text-center py-12">
+                                <p className="text-gray-500">Loading analytics...</p>
+                            </div>
+                        ) : analytics ? (
+                            <>
+                                {/* Stats Cards */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+                                        <div className="text-sm opacity-90 mb-1">Total Page Views</div>
+                                        <div className="text-3xl font-bold">{analytics.totalPageViews.toLocaleString()}</div>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
+                                        <div className="text-sm opacity-90 mb-1">Unique Visitors (All Time)</div>
+                                        <div className="text-3xl font-bold">{analytics.uniqueVisitors.allTime.toLocaleString()}</div>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
+                                        <div className="text-sm opacity-90 mb-1">Visitors This Month</div>
+                                        <div className="text-3xl font-bold">{analytics.uniqueVisitors.month.toLocaleString()}</div>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg">
+                                        <div className="text-sm opacity-90 mb-1">Visitors Today</div>
+                                        <div className="text-3xl font-bold">{analytics.uniqueVisitors.today.toLocaleString()}</div>
+                                    </div>
+                                </div>
+
+                                {/* Top Pages */}
+                                <div className="bg-white border border-gray-200 rounded-xl p-6">
+                                    <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Top Pages</h4>
+                                    <div className="space-y-2">
+                                        {analytics.topPages.map((page: any, idx: number) => (
+                                            <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                                                <span className="text-gray-700 font-mono text-sm">{page.path}</span>
+                                                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">{page.count} views</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Top Referrers */}
+                                {analytics.topReferrers.length > 0 && (
+                                    <div className="bg-white border border-gray-200 rounded-xl p-6">
+                                        <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Top Referrers</h4>
+                                        <div className="space-y-2">
+                                            {analytics.topReferrers.map((ref: any, idx: number) => (
+                                                <div key={idx} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                                                    <span className="text-gray-700 text-sm">{ref.referrer}</span>
+                                                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">{ref.count} visits</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Recent Visitors */}
+                                <div className="bg-white border border-gray-200 rounded-xl p-6">
+                                    <h4 className="text-lg font-bold text-pdi-dark-blue mb-4">Recent Visitors (Last 50)</h4>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm">
+                                            <thead className="bg-gray-50 border-b border-gray-200">
+                                                <tr>
+                                                    <th className="text-left p-3 font-semibold text-gray-700">Time</th>
+                                                    <th className="text-left p-3 font-semibold text-gray-700">Page</th>
+                                                    <th className="text-left p-3 font-semibold text-gray-700">Referrer</th>
+                                                    <th className="text-left p-3 font-semibold text-gray-700">IP Hash</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {analytics.recentVisitors.map((visitor: any, idx: number) => (
+                                                    <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50">
+                                                        <td className="p-3 text-gray-600">{new Date(visitor.timestamp).toLocaleString()}</td>
+                                                        <td className="p-3 font-mono text-gray-700">{visitor.path}</td>
+                                                        <td className="p-3 text-gray-600 truncate max-w-xs">{visitor.referrer}</td>
+                                                        <td className="p-3 font-mono text-xs text-gray-500">{visitor.ipHash}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="text-center py-12">
+                                <p className="text-gray-500">No analytics data available yet.</p>
+                            </div>
+                        )}
                     </div>
                 )}
 
