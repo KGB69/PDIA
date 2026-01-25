@@ -6,6 +6,7 @@ import fs from 'fs';
 import cookieParser from 'cookie-parser';
 import { logVisitor, getAnalyticsStats } from './analytics.js';
 import { verifyPassword, generateToken, isLockedOut, recordFailedAttempt, clearLoginAttempts, requireAuth } from './auth.js';
+import { securityMiddleware, getSuspiciousActivity, getBlacklistData, emergencyUnlock } from './security.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,6 +29,9 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // --- MIDDLEWARE FIRST ---
+
+// Security middleware (FIRST - blocks malicious requests)
+app.use(securityMiddleware);
 
 // Global request logger
 app.use((req, res, next) => {
@@ -199,6 +203,37 @@ app.get('/api/analytics/stats', requireAuth, (req, res) => {
     } catch (error) {
         console.error('Error fetching analytics:', error);
         res.status(500).json({ error: 'Failed to fetch analytics' });
+    }
+});
+
+// Emergency Unlock Endpoint (for when you're locked out)
+app.post('/api/emergency-unlock', express.json(), (req, res) => {
+    const { secret } = req.body;
+
+    // Use a secret key from environment variable
+    const EMERGENCY_SECRET = process.env.EMERGENCY_UNLOCK_SECRET || 'pdia-emergency-2026';
+
+    if (secret === EMERGENCY_SECRET) {
+        emergencyUnlock();
+        res.json({ success: true, message: 'Login attempts cleared. You can now login.' });
+    } else {
+        res.status(401).json({ error: 'Invalid emergency secret' });
+    }
+});
+
+// Security Dashboard Endpoint (protected)
+app.get('/api/security/dashboard', requireAuth, (req, res) => {
+    try {
+        const suspicious = getSuspiciousActivity();
+        const blacklist = getBlacklistData();
+        res.json({
+            suspiciousRequests: suspicious.requests.slice(-100), // Last 100
+            blacklistedIPs: blacklist.ips,
+            autoBlocked: blacklist.autoBlocked
+        });
+    } catch (error) {
+        console.error('Error fetching security data:', error);
+        res.status(500).json({ error: 'Failed to fetch security data' });
     }
 });
 
