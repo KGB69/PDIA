@@ -106,14 +106,14 @@ app.post('/api/save-content', express.json({ limit: '50mb' }), (req, res) => {
 
 // Get Content Endpoint (serves the persistent content.json)
 app.get('/api/content', (req, res) => {
-    const contentPath = join(__dirname, 'content.json');
+    const contentPath = join(dataDir, 'content.json');
 
     // If persistent content.json doesn't exist, copy from dist (initial state)
     if (!fs.existsSync(contentPath)) {
         const distContentPath = join(__dirname, 'dist', 'content.json');
         if (fs.existsSync(distContentPath)) {
             fs.copyFileSync(distContentPath, contentPath);
-            console.log('Initialized content.json from dist');
+            console.log('Initialized content.json from dist to:', contentPath);
         }
     }
 
