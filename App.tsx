@@ -23,7 +23,20 @@ const AppContent: React.FC = () => {
   // Check authentication status on mount
   useEffect(() => {
     checkAuth();
-  }, []);
+
+    // Add keyboard shortcut: Ctrl/Cmd + Shift + A for admin access
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        if (!isAuthenticated) {
+          setShowLogin(true);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [isAuthenticated]);
 
   const checkAuth = async () => {
     try {
