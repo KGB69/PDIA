@@ -52,8 +52,7 @@ const Header: React.FC = () => {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className={`text-base font-medium transition-colors ${isScrolled ? 'text-pdi-dark-blue hover:text-pdi-red' : 'text-white hover:text-pdi-red'
-                  }`}
+                className="text-base font-medium text-pdi-dark-blue hover:text-pdi-red transition-colors"
               >
                 {link.name}
               </a>
@@ -62,7 +61,7 @@ const Header: React.FC = () => {
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`md:hidden p-2 rounded-md ${isScrolled ? 'text-pdi-dark-blue' : 'text-white'}`}
+            className="md:hidden p-2 rounded-md text-pdi-dark-blue"
           >
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {isMenuOpen ? (

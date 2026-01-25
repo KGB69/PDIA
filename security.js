@@ -141,11 +141,16 @@ function isMaliciousRequest(req) {
 export function securityMiddleware(req, res, next) {
     const ip = req.ip || req.connection.remoteAddress;
 
-    // CRITICAL: Skip security checks for static assets and legitimate paths
+    // FIRST PRIORITY: Allow ALL API endpoints (includes auth, emergency unlock, etc.)
+    // This ensures users can ALWAYS attempt login and access admin functions
+    if (req.path.startsWith('/api/')) {
+        return next();
+    }
+
+    // SECOND PRIORITY: Skip security checks for static assets and legitimate paths
     if (
         req.path.startsWith('/assets/') ||
         req.path.startsWith('/uploads/') ||
-        req.path.startsWith('/api/') ||
         req.path === '/' ||
         req.path === '/index.html' ||
         req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|webp|ttf|eot|otf|map|json)$/i)
@@ -153,16 +158,7 @@ export function securityMiddleware(req, res, next) {
         return next();
     }
 
-    // IMPORTANT: Don't block access to authentication endpoints
-    // Users should always be able to attempt login
-    if (
-        req.path.startsWith('/api/auth/') ||
-        req.path === '/api/emergency-unlock'
-    ) {
-        return next();
-    }
-
-    // Check blacklist (only for non-auth requests)
+    // Check blacklist (only for non-API, non-static requests)
     if (isBlacklisted(ip)) {
         console.log(`🚫 Blocked blacklisted IP: ${ip} - ${req.path}`);
         return res.status(403).send('Forbidden');
