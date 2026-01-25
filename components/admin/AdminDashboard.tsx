@@ -185,6 +185,29 @@ const AdminDashboard: React.FC = () => {
         }
     };
 
+    // Gallery CRUD
+    const handleGalleryChange = (index: number, field: string, value: string) => {
+        const newGallery = [...content.gallery];
+        newGallery[index] = { ...newGallery[index], [field]: value };
+        updateContent({ ...content, gallery: newGallery });
+    };
+
+    const addGalleryImage = () => {
+        const newImage = {
+            image: '/placeholder-gallery.jpg',
+            caption: 'New gallery image',
+            alt: 'Gallery image description'
+        };
+        updateContent({ ...content, gallery: [...content.gallery, newImage] });
+    };
+
+    const deleteGalleryImage = (index: number) => {
+        if (confirm('Are you sure you want to delete this image?')) {
+            const newGallery = content.gallery.filter((_, i) => i !== index);
+            updateContent({ ...content, gallery: newGallery });
+        }
+    };
+
     const handleBrandingChange = (field: string, value: string) => {
         updateContent({
             ...content,
